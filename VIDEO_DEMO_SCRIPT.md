@@ -67,10 +67,10 @@ docker logs -f pubsub-aggregator
 
 ```powershell
 # 4. Test health check
-curl http://localhost:8080/health
+Invoke-RestMethod -Uri http://localhost:8080/health
 
 # 5. Cek root endpoint
-curl http://localhost:8080
+Invoke-RestMethod -Uri http://localhost:8080
 ```
 
 **Narasi:**
@@ -88,7 +88,7 @@ curl http://localhost:8080
 **3.1 Cek Stats Awal**
 ```powershell
 # Stats sebelum ada event
-curl http://localhost:8080/stats
+Invoke-RestMethod -Uri http://localhost:8080/stats
 ```
 
 **Narasi:**
@@ -97,15 +97,18 @@ curl http://localhost:8080/stats
 **3.2 Kirim Event Pertama**
 ```powershell
 # Event unik pertama
-curl -X POST http://localhost:8080/publish `
-  -H "Content-Type: application/json" `
-  -d '{
-    "topic": "user.login",
-    "event_id": "evt-demo-001",
-    "timestamp": "2025-10-24T10:00:00Z",
-    "source": "auth-service",
-    "payload": {"user_id": 123, "action": "login"}
-  }'
+$body1 = @{
+    topic = "user.login"
+    event_id = "evt-demo-001"
+    timestamp = "2025-10-24T10:00:00Z"
+    source = "auth-service"
+    payload = @{
+        user_id = 123
+        action = "login"
+    }
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri http://localhost:8080/publish -Method Post -ContentType "application/json" -Body $body1
 ```
 
 **Narasi:**
@@ -114,16 +117,19 @@ curl -X POST http://localhost:8080/publish `
 
 **3.3 Kirim Event Duplikat (Simulasi At-Least-Once)**
 ```powershell
-# Event SAMA lagi (duplikat)
-curl -X POST http://localhost:8080/publish `
-  -H "Content-Type: application/json" `
-  -d '{
-    "topic": "user.login",
-    "event_id": "evt-demo-001",
-    "timestamp": "2025-10-24T10:01:00Z",
-    "source": "auth-service",
-    "payload": {"user_id": 123, "action": "login"}
-  }'
+# Event SAMA lagi (duplikat) - hanya timestamp berbeda
+$body2 = @{
+    topic = "user.login"
+    event_id = "evt-demo-001"
+    timestamp = "2025-10-24T10:01:00Z"
+    source = "auth-service"
+    payload = @{
+        user_id = 123
+        action = "login"
+    }
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri http://localhost:8080/publish -Method Post -ContentType "application/json" -Body $body2
 ```
 
 **Narasi:**
@@ -133,16 +139,19 @@ curl -X POST http://localhost:8080/publish `
 
 **3.4 Kirim Event Duplikat Lagi (ke-3)**
 ```powershell
-# Duplikat ke-3
-curl -X POST http://localhost:8080/publish `
-  -H "Content-Type: application/json" `
-  -d '{
-    "topic": "user.login",
-    "event_id": "evt-demo-001",
-    "timestamp": "2025-10-24T10:02:00Z",
-    "source": "auth-service",
-    "payload": {"user_id": 123, "action": "login"}
-  }'
+# Duplikat ke-3 - masih event_id yang sama
+$body3 = @{
+    topic = "user.login"
+    event_id = "evt-demo-001"
+    timestamp = "2025-10-24T10:02:00Z"
+    source = "auth-service"
+    payload = @{
+        user_id = 123
+        action = "login"
+    }
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri http://localhost:8080/publish -Method Post -ContentType "application/json" -Body $body3
 ```
 
 **Narasi:**
@@ -151,15 +160,18 @@ curl -X POST http://localhost:8080/publish `
 **3.5 Kirim Event Berbeda**
 ```powershell
 # Event unik kedua (event_id berbeda)
-curl -X POST http://localhost:8080/publish `
-  -H "Content-Type: application/json" `
-  -d '{
-    "topic": "user.logout",
-    "event_id": "evt-demo-002",
-    "timestamp": "2025-10-24T10:03:00Z",
-    "source": "auth-service",
-    "payload": {"user_id": 123, "action": "logout"}
-  }'
+$body4 = @{
+    topic = "user.logout"
+    event_id = "evt-demo-002"
+    timestamp = "2025-10-24T10:03:00Z"
+    source = "auth-service"
+    payload = @{
+        user_id = 123
+        action = "logout"
+    }
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri http://localhost:8080/publish -Method Post -ContentType "application/json" -Body $body4
 ```
 
 **Narasi:**
@@ -183,7 +195,7 @@ docker logs pubsub-aggregator --tail 20
 
 **3.7 Cek Stats Setelah Processing**
 ```powershell
-curl http://localhost:8080/stats
+Invoke-RestMethod -Uri http://localhost:8080/stats
 ```
 
 **Narasi:**
@@ -198,10 +210,10 @@ curl http://localhost:8080/stats
 **3.8 Query Events**
 ```powershell
 # Get semua events
-curl http://localhost:8080/events
+Invoke-RestMethod -Uri http://localhost:8080/events
 
 # Get events by topic
-curl "http://localhost:8080/events?topic=user.login"
+Invoke-RestMethod -Uri "http://localhost:8080/events?topic=user.login"
 ```
 
 **Narasi:**
@@ -235,7 +247,7 @@ docker logs pubsub-aggregator --tail 10
 
 **4.2 Cek Stats Setelah Restart**
 ```powershell
-curl http://localhost:8080/stats
+Invoke-RestMethod -Uri http://localhost:8080/stats
 ```
 
 **Narasi:**
@@ -245,15 +257,18 @@ curl http://localhost:8080/stats
 **4.3 Kirim Event Duplikat Setelah Restart**
 ```powershell
 # Kirim evt-demo-001 LAGI setelah restart
-curl -X POST http://localhost:8080/publish `
-  -H "Content-Type: application/json" `
-  -d '{
-    "topic": "user.login",
-    "event_id": "evt-demo-001",
-    "timestamp": "2025-10-24T11:00:00Z",
-    "source": "auth-service",
-    "payload": {"user_id": 123, "action": "login_after_restart"}
-  }'
+$bodyAfterRestart = @{
+    topic = "user.login"
+    event_id = "evt-demo-001"
+    timestamp = "2025-10-24T11:00:00Z"
+    source = "auth-service"
+    payload = @{
+        user_id = 123
+        action = "login_after_restart"
+    }
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri http://localhost:8080/publish -Method Post -ContentType "application/json" -Body $bodyAfterRestart
 ```
 
 **Narasi:**
@@ -269,7 +284,7 @@ Start-Sleep -Seconds 2
 docker logs pubsub-aggregator --tail 5
 
 # Stats
-curl http://localhost:8080/stats
+Invoke-RestMethod -Uri http://localhost:8080/stats
 ```
 
 **Narasi:**
@@ -285,7 +300,7 @@ curl http://localhost:8080/stats
 
 **4.5 Query Events (Masih Ada)**
 ```powershell
-curl http://localhost:8080/events
+Invoke-RestMethod -Uri http://localhost:8080/events
 ```
 
 **Narasi:**
@@ -339,19 +354,115 @@ curl http://localhost:8080/events
 
 ---
 
-### **[07:30-08:00] PART 6: Unit Tests & Closing**
+### **[07:30-08:30] PART 6: Docker Compose (BONUS +10%)**
+
+**Yang Ditampilkan:**
+
+**6.1 Cleanup Container Sebelumnya**
+```powershell
+# Stop dan hapus container manual
+docker stop pubsub-aggregator
+docker rm pubsub-aggregator
+```
+
+**Narasi:**
+> "Sekarang saya akan tunjukkan Docker Compose sebagai BONUS.
+> Docker Compose memudahkan orchestration multiple services dengan satu command.
+> Mari kita lihat konfigurasinya."
+
+**6.2 Tunjukkan docker-compose.yml**
+```powershell
+# Tampilkan isi docker-compose.yml
+cat docker-compose.yml
+```
+
+**Narasi:**
+> "File docker-compose.yml ini mendefinisikan:
+> - Service aggregator: aplikasi utama kita
+> - Service publisher: untuk testing (optional)
+> - Network internal: pubsub-network untuk komunikasi antar service
+> - Volume persistent: ./data untuk database SQLite
+> - Health check: memastikan service ready
+> 
+> Ini memenuhi requirement bonus: 2 service dalam internal network, tidak ada layanan eksternal publik."
+
+**6.3 Start dengan Docker Compose**
+```powershell
+# Start semua services
+docker-compose up -d
+```
+
+**Narasi:**
+> "Command 'docker-compose up -d' akan:
+> 1. Build image jika belum ada
+> 2. Create network
+> 3. Create volume
+> 4. Start semua services dalam satu command
+> 
+> Jauh lebih mudah dibanding manual docker run!"
+
+**6.4 Check Services Status**
+```powershell
+# Lihat status services
+docker-compose ps
+
+# Lihat logs
+docker-compose logs aggregator
+```
+
+**Narasi:**
+> "Semua services running. Aggregator sudah siap menerima event."
+
+**6.5 Test dengan Docker Compose**
+```powershell
+# Test health check
+Invoke-RestMethod -Uri http://localhost:8080/health
+
+# Send event
+$testEvent = @{
+    topic = "compose.test"
+    event_id = "evt-compose-001"
+    timestamp = "2025-10-24T12:00:00Z"
+    source = "compose-demo"
+    payload = @{ test = "docker-compose" }
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri http://localhost:8080/publish -Method Post -ContentType "application/json" -Body $testEvent
+
+# Check stats
+Invoke-RestMethod -Uri http://localhost:8080/stats
+```
+
+**Narasi:**
+> "Sistem berfungsi sama seperti sebelumnya, tapi management lebih mudah dengan Docker Compose."
+
+**6.6 Cleanup Docker Compose**
+```powershell
+# Stop semua services
+docker-compose down
+
+# Atau, stop dan hapus volumes (HATI-HATI!)
+# docker-compose down -v
+```
+
+**Narasi:**
+> "Docker Compose down akan stop dan remove semua containers.
+> Volume data tetap ada kecuali kita gunakan flag -v.
+> 
+> Ini adalah BONUS feature yang menunjukkan best practice dalam deployment multi-service application."
+
+---
+
+### **[08:30-09:00] PART 7: Unit Tests & Closing**
 
 **Yang Ditampilkan:**
 ```powershell
-# Stop container dulu
-docker stop pubsub-aggregator
-
-# Run unit tests
+# Run unit tests (container sudah down)
 pytest tests/ -v
 ```
 
 **Narasi:**
-> "Sistem sudah dilengkapi unit tests:
+> "Sistem sudah dilengkapi unit tests lengkap:
 > - test_duplicate_detection
 > - test_persistence_after_restart
 > - test_high_volume_events (5000+ events, 20% duplikasi)
@@ -366,14 +477,22 @@ pytest tests/ -v
 > ✅ Persistent storage tahan restart
 > ✅ At-least-once delivery handling
 > ✅ Docker containerization
+> ✅ Docker Compose orchestration (BONUS)
+> 
+> Repository sudah include:
+> - Source code lengkap
+> - Unit tests comprehensive (27 tests)
+> - Dockerfile dengan best practices
+> - Docker Compose untuk multi-service
+> - Documentation lengkap di README.md
 > 
 > Terima kasih sudah menonton! Link repository dan dokumentasi ada di deskripsi."
 
-**Cleanup:**
+**Final Cleanup:**
 ```powershell
-# Cleanup (optional, untuk demo saja)
-docker rm pubsub-aggregator
-docker rmi uts-aggregator
+# Cleanup semua (optional)
+docker-compose down -v
+docker system prune -f
 ```
 
 ---
@@ -425,13 +544,21 @@ Salin ini ke deskripsi YouTube:
 03:00 - Test Idempotency & Deduplication
 05:00 - Test Persistence (Restart Container)
 07:00 - Arsitektur & Keputusan Desain
-08:00 - Unit Tests & Closing
+07:30 - Docker Compose Demo (BONUS)
+08:30 - Unit Tests & Closing
 
 📂 Repository: [Link GitHub Anda]
 📄 Dokumentasi Lengkap: README.md
 📝 Laporan: report.pdf
 
-#SistemTerdistribusi #PubSub #Idempotency #Docker #FastAPI
+✨ Features:
+- Idempotent Consumer dengan Deduplication
+- Persistent Storage (SQLite)
+- Docker + Docker Compose
+- 27 Unit Tests (5-10 required)
+- At-Least-Once Delivery Handling
+
+#SistemTerdistribusi #PubSub #Idempotency #Docker #FastAPI #DockerCompose
 ```
 
 ---
