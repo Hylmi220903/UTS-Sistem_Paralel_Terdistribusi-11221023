@@ -27,12 +27,25 @@ class DedupStore:
             db_path: Path ke database SQLite
         """
         self.db_path = db_path
+        self._conn = None
         
         # Pastikan direktori exists
         Path(db_path).parent.mkdir(parents=True, exist_ok=True)
         
         self._init_db()
         logger.info(f"DedupStore initialized with database: {db_path}")
+    
+    def _get_connection(self):
+        """Get or create database connection"""
+        if self._conn is None:
+            self._conn = sqlite3.connect(self.db_path)
+        return self._conn
+    
+    def close(self):
+        """Close database connection"""
+        if self._conn:
+            self._conn.close()
+            self._conn = None
     
     def _init_db(self):
         """Inisialisasi database dan tabel"""
