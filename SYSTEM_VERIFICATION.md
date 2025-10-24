@@ -460,15 +460,6 @@ Sistem telah memenuhi SEMUA requirements:
 - ✅ 27 unit tests (target 5-10) ✅
 - ✅ Documentation lengkap
 - ✅ Video demo skrip ready
-
-**NEXT STEPS:**
-1. Record video demo (5-8 menit) mengikuti `VIDEO_DEMO_SCRIPT.md`
-2. Upload video ke YouTube (public/unlisted)
-3. Tambahkan link video ke README.md
-4. Push final code ke GitHub
-5. Buat report.pdf/md (hubungkan ke Bab 1-7 + sitasi)
-6. Submit via LMS: link repo + link video + report
-
 ---
 
 **Dibuat pada**: 24 Oktober 2025  
