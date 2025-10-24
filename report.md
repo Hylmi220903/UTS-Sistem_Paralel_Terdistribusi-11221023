@@ -1,6 +1,6 @@
 # Analisis Teoritis dan Prinsip Desain Sistem Agregator Log Berbasis Publish-Subscribe dalam Lingkungan Terdistribusi
 
-**Nama**: Hylmi Wahyudi
+**Nama**: Hylmi Wahyudi  
 **NIM**: 11221023  
 **Mata Kuliah**: Sistem Paralel Terdistribusi - B
 **Tahun**: 2025
