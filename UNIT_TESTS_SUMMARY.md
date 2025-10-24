@@ -154,5 +154,3 @@ pytest tests/ -v
 - **Platform:** Windows 11, Python 3.14.0
 
 ---
-
-**Status:** READY FOR SUBMISSION ✅
