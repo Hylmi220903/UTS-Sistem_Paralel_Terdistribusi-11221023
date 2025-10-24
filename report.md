@@ -693,4 +693,3 @@ Mishra, A. K., & Puthal, D. (2025). Ensuring exactly-once semantics in Kafka str
 Schikuta, M. (2022). A unified logging library and architecture for improved observability in distributed information systems. Future Internet, 14(10), 274. https://doi.org/10.3390/fi14100274
 
 Singh, A., Patra, A., Ghosh, S., & Pal, A. (2021). A study of distributed event streaming publish-subscribe systems. Term Project Report, CS60002, IIT Kharagpur. Diakses dari https://www.researchgate.net/publication/358106402_A_Study_of_Distributed_Event_Streaming_Publish-Subscribe_Systems
-
