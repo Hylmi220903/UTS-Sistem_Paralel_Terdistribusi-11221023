@@ -4,7 +4,24 @@
 
 ---
 
-## 📋 PART 1: Setup & Build
+## �️ QUICK RESET (Before Video Demo)
+
+### Reset Database & Fresh Start
+```powershell
+# Option 1: Using script (RECOMMENDED)
+.\reset_and_start.ps1
+
+# Option 2: Manual reset
+Remove-Item "data\dedup_store.db" -Force
+.\.venv\Scripts\python.exe -m uvicorn src.main:app --host 0.0.0.0 --port 8080
+
+# Option 3: Reset only (without starting server)
+.\reset_db.ps1
+```
+
+---
+
+## �📋 PART 1: Setup & Build
 
 ### 1.1 Clean Start
 ```powershell
