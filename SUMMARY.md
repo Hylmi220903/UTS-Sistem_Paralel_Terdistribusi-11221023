@@ -212,6 +212,11 @@ Kombinasi kedua mekanisme ini memungkinkan sistem untuk mencapai konsistensi eve
 Pada akhirnya, prinsip-prinsip yang dibahas—dekomposisi melalui Pub-Sub, pola toleransi kegagalan seperti retry dan DLQ, pendekatan praktis terhadap pengurutan event, dan desain yang digerakkan oleh metrik—tidaklah unik untuk agregator log. Prinsip-prinsip ini merupakan fondasi yang dapat digeneralisasi untuk hampir semua aplikasi terdistribusi modern yang intensif data, mulai dari platform e-commerce hingga sistem analitik real-time. Keberhasilan dalam membangun sistem semacam itu terletak pada pemahaman yang mendalam tentang trade-off yang ada dan kemampuan untuk merancang solusi yang secara eksplisit mengelola ketidakpastian, bukan mencoba untuk menghilangkannya.
 
 Daftar Pustaka
+
+M. van Steen and A.S. Tanenbaum, Distributed Systems, 4th ed., distributed-systems.net, 2023.
+
+George Coulouris, G., Dollimore, J., Kindberg, T., Blair, G. (2011). Distributed Systems: Concepts and Design.
+
 Al-Madani, B., Al-Roubaiey, A., & Baig, Z. A. (n.d.). Publish subscribe versus client server architecture. ResearchGate. Diakses dari https://www.researchgate.net/figure/Publish-subscribe-versus-client-server-architecture_fig1_259781956
 
 Al-Zoubi, A. Y., Al-Masri, M. M., Al-Harahsheh, H. H., Al-Matahneh, S. A., & Al-Khatib, S. N. (2023). A systematic literature review on the performance comparison of SQL and NoSQL databases for big data analytics. Big Data and Cognitive Computing, 7(2), 97. https://doi.org/10.3390/bdcc7020097
