@@ -2,7 +2,7 @@
 
 **Nama**: Hylmi Wahyudi  
 **NIM**: 11221023  
-**Mata Kuliah**: Sistem Paralel Terdistribusi - B
+**Mata Kuliah**: Sistem Paralel Terdistribusi - B  
 **Tahun**: 2025
 
 ---
